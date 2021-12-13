@@ -14,7 +14,6 @@ class MyApp extends StatelessWidget {
           title: const Text('Welcome to Flutter'),
         ),
         body: Center(
-          //child: Text('Hello World'),
           child: Text(wordPair.asPascalCase),
         ),
       ),
