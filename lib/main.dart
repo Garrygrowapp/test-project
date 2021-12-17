@@ -26,13 +26,50 @@ class _RandomWordsState extends State<RandomWords> {
   final _suggestions = <WordPair>[];
   final _biggerFont = const TextStyle(fontSize: 18);
   final _saved = <WordPair>[];
+  void _pushSaved(){
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+          builder: (context) {
+            final tiles = _saved.map(
+                (pair) {
+                  return ListTile(
+                    title: Text(
+                      pair.asPascalCase,
+                      style: _biggerFont,
+                    ),
+                  );
+                },
+            );
+            final divided = tiles.isNotEmpty
+              ? ListTile.divideTiles(
+                context: context,
+                tiles: tiles,
+                ).toList()
+                : <Widget>[];
+            return Scaffold(
+              appBar: AppBar(
+                title: const Text('Saved Suggestions'),
+              ),
+              body: ListView(children: divided),
+            );
+          },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
 
     return Scaffold (                     // Add from here...
       appBar: AppBar(
-        title: Text('Garry app'),
+        title: const Text('Garry app'),
+        actions: [
+          IconButton(
+              onPressed: _pushSaved,
+              icon: const Icon(Icons.list),
+              tooltip: 'Saved Suggestions',
+          )
+        ],
       ),
       body: _buildSuggestions(),
     );                                      // ... to here.
@@ -71,7 +108,7 @@ class _RandomWordsState extends State<RandomWords> {
       ),
       trailing: Icon(
         alreadySaved ? Icons.favorite: Icons.favorite_border,
-        color: alreadySaved ? Colors.red : null,
+        color: alreadySaved ? Colors.pinkAccent : null,
         semanticLabel: alreadySaved ? 'Remove from saved' : 'Save',
       ),
       onTap: () {
