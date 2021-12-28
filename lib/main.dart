@@ -1,87 +1,77 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:telecom_nativ/Pages/telecom.dart';
+import 'Pages/Chat.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
+  static const String _title = 'MVNO project pattern';
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'MVNO',
-      supportedLocales: const [Locale('en', '')],
+    return  MaterialApp(
+      title: _title,
       theme: ThemeData(
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFF00FFD1),
-          foregroundColor: Color(0xFF23262C),
-        ),
+
+        primarySwatch: Colors.blue,
       ),
-      home: NavBarPage(),
+      debugShowCheckedModeBanner: false,
+      supportedLocales: [Locale('en', '')],
+      home: const NavBarPage(initialPage: 'telecom',),
     );
   }
 }
 
 class NavBarPage extends StatefulWidget {
-  const NavBarPage({Key? key}) : super(key: key);
+  const NavBarPage({Key? key, required this.initialPage}) : super(key: key);
 
+  final String initialPage;
 
   @override
   _NavBarPageState createState() => _NavBarPageState();
 }
 
 class _NavBarPageState extends State<NavBarPage>{
-  int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-  TextStyle(
-    fontFamily: 'America_mono',
-    fontSize: 13,
-    fontWeight: FontWeight.w500,);
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Home',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 1: Business',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 2: School',
-      style: optionStyle,
-    ),
-  ];
-  void _onItemTapped(int index){
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+  String _currentPage = 'telecom';
 
   @override
   Widget build(BuildContext context) {
+    final tabs ={
+      'telecom': TestpageWidget(key: const ValueKey('telecom')),
+      'Chat': ChatPageWidget(key: const ValueKey('2')),
+      'Settings': TestpageWidget(key: const ValueKey('3')),
+    };
     return Scaffold(
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
-      ),
+      body: tabs[_currentPage],
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+            icon: ImageIcon(
+              AssetImage('assets/images/telecom_Icon.png'),
+            ),
+            label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.business),
-            label: 'Business',
+          icon: ImageIcon(
+            AssetImage('assets/images/Chat_Icon.png'),
+            ),
+            label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.school),
-            label: 'School',
-          ),
+            icon: ImageIcon(
+              AssetImage('assets/images/settings_icon.png'),
+            ),
+            label: '',
+           ),
         ],
-        currentIndex: _selectedIndex,
-          selectedItemColor: Colors.amber[800],
-        onTap: _onItemTapped,
+        currentIndex: tabs.keys.toList().indexOf(_currentPage),
+        iconSize: 16,
+        selectedItemColor: const Color(0xFF0F1011),
+        onTap: (i) => setState(() => _currentPage = tabs.keys.toList()[i]),
+        type: BottomNavigationBarType.fixed,
+        unselectedItemColor: const Color(0xFFAEAFB1),
       ),
     );
   }
